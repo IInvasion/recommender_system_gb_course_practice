@@ -45,8 +45,9 @@ class MainRecommender:
                                           fill_value=0)
 
         user_item_matrix = user_item_matrix.astype(float)
+        sparse_user_item = csr_matrix(user_item_matrix).tocsr()
 
-        return user_item_matrix
+        return user_item_matrix, sparse_user_item
 
     @staticmethod
     def prepare_dicts(user_item_matrix):

@@ -8,7 +8,8 @@ from sklearn.manifold import TSNE
 
 
 def prefilter_items(data, take_n_popular=5000, item_features=None):
-    # Уберем не интересные для рекоммендаций категории (department)
+    """Уберем не интересные для рекоммендаций категории (department)."""
+
     if item_features is not None:
         department_size = pd.DataFrame(item_features. \
                                        groupby('department')['item_id'].nunique(). \
@@ -21,14 +22,12 @@ def prefilter_items(data, take_n_popular=5000, item_features=None):
 
         data = data[~data['item_id'].isin(items_in_rare_departments)]
 
-    # Уберем слишком дешевые товары (на них не заработаем). 1 покупка из рассылок стоит 60 руб.
     data['price'] = data['sales_value'] / (np.maximum(data['quantity'], 1))
+
     data = data[data['price'] > 2]
 
-    # Уберем слишком дорогие товарыs
     data = data[data['price'] < 50]
 
-    # Возбмем топ по популярности
     popularity = data.groupby('item_id')['quantity'].sum().reset_index()
     popularity.rename(columns={'quantity': 'n_sold'}, inplace=True)
 
@@ -36,7 +35,6 @@ def prefilter_items(data, take_n_popular=5000, item_features=None):
 
     # Заведем фиктивный item_id (если юзер покупал товары из топ-5000, то он "купил" такой товар)
     data.loc[~data['item_id'].isin(top), 'item_id'] = 999999
-
 
     return data
 
