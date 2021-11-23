@@ -51,13 +51,13 @@ def money_recall_at_k(recommended_list, bought_list, prices_recommended, prices_
 def ap_k(recommended_list, bought_list, k=5):
     bought_list = np.array(bought_list)
     recommended_list = np.array(recommended_list)
+    recommended_list = recommended_list[recommended_list <= k]
 
     relevant_indexes = np.nonzero(np.isin(recommended_list, bought_list))[0]
     if len(relevant_indexes) == 0:
         return 0
     amount_relevant = len(relevant_indexes)
 
-    relevant_indexes = relevant_indexes[relevant_indexes <= k]
 
     sum_ = sum(
         [precision_at_k(recommended_list, bought_list, k=index_relevant + 1) for index_relevant in relevant_indexes])
