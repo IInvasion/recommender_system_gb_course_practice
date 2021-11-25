@@ -47,8 +47,8 @@ class MainRecommender:
         user_item_matrix = pd.pivot_table(data,
                                           index='user_id',
                                           columns='item_id',
-                                          values='quantity',  # Можно пробовать другие варианты
-                                          aggfunc='count',
+                                          values='sales_value',  # Можно пробовать другие варианты
+                                          aggfunc='sum',
                                           fill_value=0
                                           )
 
@@ -84,7 +84,7 @@ class MainRecommender:
         return own_recommender
 
     @staticmethod
-    def fit(user_item_matrix, n_factors=20, regularization=0.001, iterations=15, num_threads=4):
+    def fit(user_item_matrix, n_factors=40, regularization=0.001, iterations=15, num_threads=4):
         """Обучает ALS"""
 
         model = AlternatingLeastSquares(factors=n_factors,
